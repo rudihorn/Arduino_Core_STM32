@@ -224,7 +224,7 @@ static uint8_t USBD_COMPOSITE_HSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
   #pragma data_alignment=4
 #endif
 /* USB COMPOSITE device Configuration Descriptor */
-static uint8_t USBD_COMPOSITE_HSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
+static uint8_t USBD_COMPOSITE_FSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
   CONFIGURATION_DESCRIPTOR(),
   IAD_DESCRIPTOR(),
   ACM_INTERFACE_DESCRIPTOR(),
