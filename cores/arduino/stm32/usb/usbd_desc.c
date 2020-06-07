@@ -130,7 +130,7 @@ USBD_DescriptorsTypeDef USBD_Desc = {
 };
 
 
-#if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))  \
+#if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
   #define BCD_USB_FLAG 0x01
 #else
   #define BCD_USB_FLAG 0x00
