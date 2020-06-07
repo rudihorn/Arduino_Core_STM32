@@ -87,19 +87,39 @@ USBD_ClassTypeDef  USBD_CDC_MSC = {
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
   #pragma data_alignment=4
 #endif
+
+#define USB_DESC_TYPE_INTERFACE_ASSOC_DESC        0x0B
+
+#define CONFIGURATION_DESCRIPTOR() \
+  0x09, \ /* bLength: Configuation Descriptor size */
+  USB_DESC_TYPE_CONFIGURATION, \ /* bDescriptorType: Configuration */
+  USB_CDC_MSC_CONFIG_DESC_SIZ, \ /* wTotalLength: Bytes returned */
+  0x00, \
+  0x03, \       /*bNumInterfaces: 3 interface*/
+  0x01, \       /*bConfigurationValue: Configuration value*/
+  0x02, \       /*iConfiguration: Index of string descriptor describing the configuration*/
+  0xC0, \       /*bmAttributes: bus powered and Supports Remote Wakeup */
+  0x32          /*MaxPower 100 mA: this current is used for detecting Vbus*/
+/* 09 */
+
+/******** IAD should be positioned just before the CDC interfaces ******
+          IAD to associate the two CDC interfaces */
+#define IAD_DESCRIPTOR() \
+  0x08, \   /* bLength: Interface Descriptor size */
+  USB_DESC_TYPE_INTERFACE_ASSOC_DESC, \ /* bDescriptorType: Interface */
+  0x00, \  /* bFirstInterface */
+  0x02, \  /* bInterfaceCount */
+  0x02, \  /* bFunctionClass */
+  0x02, \  /* bFunctionSubClass */
+  0x01, \  /* bFunctionProtocol */
+  0x04    /* iFunction (Index of string descriptor describing this function) */
+/* 08 */
+
+
 /* USB COMPOSITE device Configuration Descriptor */
 static uint8_t USBD_COMPOSITE_HSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
-  0x09, /* bLength: Configuation Descriptor size */
-  USB_DESC_TYPE_CONFIGURATION, /* bDescriptorType: Configuration */
-  USB_CDC_MSC_CONFIG_DESC_SIZ,
-  /* wTotalLength: Bytes returned */
-  0x00,
-  0x03,         /*bNumInterfaces: 3 interface*/
-  0x01,         /*bConfigurationValue: Configuration value*/
-  0x02,         /*iConfiguration: Index of string descriptor describing the configuration*/
-  0xC0,         /*bmAttributes: bus powered and Supports Remote Wakeup */
-  0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
-  /* 09 */
+  CONFIGURATION_DESCRIPTOR(),
+  IAD_DESCRIPTOR(),
 
   /*---------------------------------------------------------------------------*/
 
@@ -216,17 +236,8 @@ static uint8_t USBD_COMPOSITE_HSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
 #endif
 /* USB COMPOSITE device Configuration Descriptor */
 static uint8_t USBD_COMPOSITE_FSCfgDesc[USB_CDC_MSC_CONFIG_DESC_SIZ] = {
-  0x09, /* bLength: Configuation Descriptor size */
-  USB_DESC_TYPE_CONFIGURATION, /* bDescriptorType: Configuration */
-  USB_CDC_MSC_CONFIG_DESC_SIZ,
-  /* wTotalLength: Bytes returned */
-  0x00,
-  0x03,         /*bNumInterfaces: 3 interface*/
-  0x01,         /*bConfigurationValue: Configuration value*/
-  0x02,         /*iConfiguration: Index of string descriptor describing the configuration*/
-  0xC0,         /*bmAttributes: bus powered and Supports Remote Wakeup */
-  0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
-  /* 09 */
+  CONFIGURATION_DESCRIPTOR(),
+  IAD_DESCRIPTOR(),
 
   /*---------------------------------------------------------------------------*/
 
