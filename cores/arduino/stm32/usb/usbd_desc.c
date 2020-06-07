@@ -130,6 +130,11 @@ USBD_DescriptorsTypeDef USBD_Desc = {
 };
 
 
+#define USB_CDC_CLASS_MULTI 0xEF
+#define CDC_SUBCLASS_ACM    0x02
+#define CDC_PROTOCOL_V25TER 0x01 // Common AT commands
+
+
 #if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
   #define BCD_USB_FLAG 0x01
 #else
@@ -137,15 +142,15 @@ USBD_DescriptorsTypeDef USBD_Desc = {
 #endif
 
 
-#define USBD_CLASS_DEVICE_DESCRIPTOR(_CLASS, _SUBCLASS) \
+#define USBD_CLASS_DEVICE_DESCRIPTOR(_CLASS, _SUBCLASS, _PROTO)                \
 __ALIGN_BEGIN uint8_t USBD_Class_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = { \
   0x12,                      /* bLength */ \
   USB_DESC_TYPE_DEVICE,      /* bDescriptorType */ \
-    BCD_USB_FLAG,            /* bcdUSB */ \
+  BCD_USB_FLAG,              /* bcdUSB */ \
   0x02, \
   _CLASS,                    /* bDeviceClass */ \
   _SUBCLASS,                 /* bDeviceSubClass */ \
-  0x00,                      /* bDeviceProtocol */ \
+  _PROTO,                    /* bDeviceProtocol */ \
   USB_MAX_EP0_SIZE,          /* bMaxPacketSize */ \
   LOBYTE(USBD_VID),          /* idVendor */ \
   HIBYTE(USBD_VID),          /* idVendor */ \
@@ -160,18 +165,15 @@ __ALIGN_BEGIN uint8_t USBD_Class_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = { \
 }
 
 #ifdef USBD_USE_HID_COMPOSITE
-USBD_CLASS_DEVICE_DESCRIPTOR(0x00, 0x00);
+USBD_CLASS_DEVICE_DESCRIPTOR(0x00, 0x00, 0x00);
 #endif
 
 #ifdef USBD_USE_CDC
-USBD_CLASS_DEVICE_DESCRIPTOR(0x02, 0x02);
+USBD_CLASS_DEVICE_DESCRIPTOR(0x02, 0x02, 0x00);
 #endif
 
 #ifdef USBD_USE_CDC_MSC
-#define USB_CDC_CLASS_MULTI 0xEF
-#define CDC_SUBCLASS_ACM    0x02
-#define CDC_SUBCLASS_ATM    0x07
-USBD_CLASS_DEVICE_DESCRIPTOR(USB_CDC_CLASS_MULTI, CDC_SUBCLASS_ATM);
+USBD_CLASS_DEVICE_DESCRIPTOR(USB_CDC_CLASS_MULTI, CDC_SUBCLASS_ATM, CDC_PROTOCOL_V25TER);
 #endif
 
 /* USB Device Billboard BOS descriptor Template */
